@@ -1,101 +1,428 @@
-import Image from "next/image";
+"use client"
 
-export default function Home() {
+import { useState } from "react"
+import { ChevronRight } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
+import { Transition } from "@/components/ui/transition"
+import Image from "next/image"
+
+export default function NeighborhoodExperience() {
+  const [currentDay, setCurrentDay] = useState<string>("welcome")
+  
+  // Define the order of days
+  const dayOrder = [
+    "welcome",
+    "monday",
+    "tuesday",
+    "wednesday",
+    "thursday",
+    "friday-day",
+    "friday-night",
+    "sunday",
+    "end-screen"
+  ]
+
+  const goToDay = (day: string) => {
+    setCurrentDay(day)
+    window.scrollTo(0, 0)
+  }
+
+  const restartExperience = () => {
+    setCurrentDay("welcome")
+    window.scrollTo(0, 0)
+  }
+
+  // Calculate progress percentage
+  const getProgress = () => {
+    const currentIndex = dayOrder.indexOf(currentDay)
+    if (currentIndex <= 0) return 0
+    if (currentIndex >= dayOrder.length - 1) return 100
+    
+    return Math.round((currentIndex / (dayOrder.length - 2)) * 100)
+  }
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
+      <div className="container max-w-md mx-auto px-4 py-8 sm:py-6 relative">
+        {/* Progress indicator */}
+        {currentDay !== "welcome" && currentDay !== "end-screen" && (
+          <div className="mb-6 animate-fadeIn">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-primary">{getProgress()}% fullført</span>
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-2.5">
+              <div 
+                className="bg-primary h-2.5 rounded-full transition-all duration-500 ease-out" 
+                style={{ width: `${getProgress()}%` }}
+              ></div>
+            </div>
+          </div>
+        )}
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        {/* Content container with fixed height for better transitions */}
+        <div className="relative min-h-[60vh] flex items-center justify-center">
+          {/* Welcome Screen */}
+          <Transition 
+            show={currentDay === "welcome"} 
+            className="w-full"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+            <div className="flex min-h-[80vh] flex-col items-center justify-center text-center">
+              <div className="max-w-sm mx-auto">
+                <h1 className="mb-8 text-3xl sm:text-2xl font-bold text-primary">OPPLEV EN UKE I DITT NYE NABOLAG!</h1>
+                <p className="mb-10 text-base sm:text-sm text-muted-foreground">
+                  Velkommen til et nabolag som har alt du trenger for en behagelig og praktisk hverdag! Med enkel tilgang
+                  til transport, butikker, restauranter og fritidsaktiviteter, kan du nyte en balansert livsstil – enten du
+                  er på farten eller vil slappe av.
+                </p>
+                
+                <div className="relative overflow-hidden rounded-lg shadow-lg border border-gray-100 mb-10">
+                  <Image 
+                    src="/kronstad.png" 
+                    alt="Kronstad neighborhood" 
+                    width={600}
+                    height={400}
+                    className="w-full h-auto animate-subtle-zoom"
+                  />
+                </div>
+                
+                <Button size="lg" className="w-full max-w-xs font-semibold text-base py-6 mx-auto" onClick={() => goToDay("monday")}>
+                  Start opplevelsen
+                </Button>
+              </div>
+            </div>
+          </Transition>
+
+          {/* Monday */}
+          <Transition 
+            show={currentDay === "monday"} 
+            className="w-full"
           >
-            Read our docs
-          </a>
+            <div>
+              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+                MANDAG
+              </h1>
+              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">
+                Ny uke, nye muligheter – og heldigvis er reisen til jobb enkel og effektiv:
+              </p>
+              <div className="space-y-4 sm:space-y-3">
+                <DayOption
+                  emoji="🚊"
+                  title="Bybanen"
+                  description="Kun få minutters gange til holdeplassen, med både Linje 1 og 2 lett tilgjengelig."
+                  onClick={() => goToDay("tuesday")}
+                />
+                <DayOption
+                  emoji="👟"
+                  title="Til fots"
+                  description="Start dagen med en frisk spasertur til sentrum."
+                  onClick={() => goToDay("tuesday")}
+                />
+                <DayOption
+                  emoji="🚲"
+                  title="Bysykkel"
+                  description="Flere stasjoner i nærheten gjør det lett å tråkke seg inn i arbeidsmodus."
+                  onClick={() => goToDay("tuesday")}
+                />
+              </div>
+            </div>
+          </Transition>
+
+          {/* Tuesday */}
+          <Transition 
+            show={currentDay === "tuesday"} 
+            className="w-full"
+          >
+            <div>
+              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+                TIRSDAG
+              </h1>
+              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">
+                Etter en lang dag på jobb er det tid for bevegelse og frisk luft:
+              </p>
+              <div className="space-y-4 sm:space-y-3">
+                <DayOption
+                  emoji="🏃‍♀️"
+                  title="Løp rundt Store Lungegårdsvannet"
+                  description="En populær 3 km lang rundløype."
+                  onClick={() => goToDay("wednesday")}
+                />
+                <DayOption
+                  emoji="🚶‍♂️"
+                  title="Gå en tur rundt Solheimsvannet"
+                  description="En rolig 1 km sløyfe rett utenfor døren."
+                  onClick={() => goToDay("wednesday")}
+                />
+                <DayOption
+                  emoji="🏋️"
+                  title="Sammen Kronstad"
+                  description="Et  moderne treningssenter med varierte treningsmuligheter."
+                  onClick={() => goToDay("wednesday")}
+                />
+                <DayOption
+                  emoji="🏊"
+                  title="ADO Arena"
+                  description="En kort bybanetur tar deg til Bergens beste svømmehall."
+                  onClick={() => goToDay("wednesday")}
+                />
+              </div>
+            </div>
+          </Transition>
+
+          {/* Wednesday */}
+          <Transition 
+            show={currentDay === "wednesday"} 
+            className="w-full"
+          >
+            <div>
+              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+                ONSDAG
+              </h1>
+              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">
+                Midtveis i uken – tid for å fylle kjøleskapet og ta unna dagligdagse ærender:
+              </p>
+              <div className="space-y-4 sm:space-y-3">
+                <DayOption
+                  emoji="🛒"
+                  title="Kiwi"
+                  description="Ca. 250m fra boligen."
+                  onClick={() => goToDay("thursday")}
+                />
+                <DayOption
+                  emoji="🛒"
+                  title="Rema 1000"
+                  description="Ca. 250m fra boligen."
+                  onClick={() => goToDay("thursday")}
+                />
+                <DayOption
+                  emoji="🛒"
+                  title="Bunnpris (søndagsåpent)"
+                  description="Ca. 350m fra boligen."
+                  onClick={() => goToDay("thursday")}
+                />
+                <DayOption
+                  emoji="📮"
+                  title="Spar (med post i butikk)"
+                  description="Ca. 450m fra boligen."
+                  onClick={() => goToDay("thursday")}
+                />
+                <DayOption
+                  emoji="💊"
+                  title="Apotek 1"
+                  description="Ca. 300m fra boligen."
+                  onClick={() => goToDay("thursday")}
+                />
+              </div>
+            </div>
+          </Transition>
+
+          {/* Thursday */}
+          <Transition 
+            show={currentDay === "thursday"} 
+            className="w-full"
+          >
+            <div>
+              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+                TORSDAG
+              </h1>
+              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">Lad opp før helgen med litt selvpleie og velvære:</p>
+              <div className="space-y-4 sm:space-y-3">
+                <DayOption
+                  emoji="🧖‍♀️"
+                  title="Sammen Kronstad badstue"
+                  description="Perfekt etter en treningsøkt for å myke opp slitne muskler."
+                  onClick={() => goToDay("friday-day")}
+                />
+                <DayOption
+                  emoji="☀️"
+                  title="Takterrassen"
+                  description="Slapp av med utsikt over byens tak og fjell."
+                  onClick={() => goToDay("friday-day")}
+                />
+                <DayOption
+                  emoji="🧺"
+                  title="Leaparken"
+                  description="Nyt en rolig stund."
+                  onClick={() => goToDay("friday-day")}
+                />
+              </div>
+            </div>
+          </Transition>
+
+          {/* Friday Day */}
+          <Transition 
+            show={currentDay === "friday-day"} 
+            className="w-full"
+          >
+            <div>
+              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+                FREDAG
+              </h1>
+              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">Få unna siste arbeidsøkten før helgen:</p>
+              <div className="space-y-4 sm:space-y-3">
+                <DayOption
+                  emoji="🏛️"
+                  title="Høgskulen på Vestlandet"
+                  description="Moderne campus med gode arbeidsplasser. Ca. 600m til hovedbygget."
+                  onClick={() => goToDay("friday-night")}
+                />
+                <DayOption
+                  emoji="☕"
+                  title="Godt Brød Kronstad"
+                  description="Produktivitet med nybrygget kaffe og bakervarer. Ca. 200m unna."
+                  onClick={() => goToDay("friday-night")}
+                />
+                <DayOption
+                  emoji="☕"
+                  title="Albatrossen"
+                  description="Koselig kafé med avslappet atmosfære og god kaffe. Ca. 700m unna."
+                  onClick={() => goToDay("friday-night")}
+                />
+                <DayOption
+                  emoji="🏠"
+                  title="Hjemmekontor"
+                  description="Nyt arbeidsroen i din egen leilighet."
+                  onClick={() => goToDay("friday-night")}
+                />
+              </div>
+            </div>
+          </Transition>
+
+          {/* Friday Night */}
+          <Transition 
+            show={currentDay === "friday-night"} 
+            className="w-full"
+          >
+            <div>
+              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+                FREDAG KVELD
+              </h1>
+              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">
+                Endelig helg! Magen rumler etter en produktiv uke. Hva frister til middag?
+              </p>
+              <div className="space-y-4 sm:space-y-3">
+                <DayOption
+                  emoji="🍔"
+                  title="Bien Snackbar"
+                  description="En saftig burger og noe godt i glasset i en hyggelig atmosfære. Ca. 900m unna."
+                  onClick={() => goToDay("sunday")}
+                />
+                <DayOption
+                  emoji="🥙"
+                  title="Greek Gyros House"
+                  description="Gresk street food – raskt, smakfullt og mettende. Ca. 200m unna."
+                  onClick={() => goToDay("sunday")}
+                />
+                <DayOption
+                  emoji="🍕"
+                  title="Sakarias"
+                  description="Bydelens favoritt med steinovnsbakte pizzaer og gode råvarer. Ca. 800m unna."
+                  onClick={() => goToDay("sunday")}
+                />
+                <DayOption
+                  emoji="🏠"
+                  title="Hjemmekos"
+                  description="Lag noe godt hjemme, sleng beina på bordet og nyt en avslappende start på helgen."
+                  onClick={() => goToDay("sunday")}
+                />
+              </div>
+            </div>
+          </Transition>
+
+          {/* Sunday */}
+          <Transition 
+            show={currentDay === "sunday"} 
+            className="w-full"
+          >
+            <div>
+              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+                SØNDAG
+              </h1>
+              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">Rund av uken med gode opplevelser:</p>
+              <div className="space-y-4 sm:space-y-3">
+                <DayOption
+                  emoji="⚽"
+                  title="Brann Stadion"
+                  description="Bare 10 minutters gange til fotballfest og elektrisk stemning!"
+                  onClick={() => goToDay("end-screen")}
+                />
+                <DayOption
+                  emoji="🎭"
+                  title="Forum Scene"
+                  description="Konserter, teater og stand-up – kulturen er rett rundt hjørnet."
+                  onClick={() => goToDay("end-screen")}
+                />
+                <DayOption
+                  emoji="🌲"
+                  title="Løvstien"
+                  description="En avslappende søndagstur med panoramautsikt over Bergen."
+                  onClick={() => goToDay("end-screen")}
+                />
+              </div>
+            </div>
+          </Transition>
+
+          {/* End Screen */}
+          <Transition 
+            show={currentDay === "end-screen"} 
+            className="w-full"
+          >
+            <div className="flex min-h-[80vh] flex-col items-center justify-center text-center">
+              <div className="max-w-sm mx-auto">
+                <div className="mb-8 flex justify-center">
+                  <div className="relative h-24 w-24 sm:h-20 sm:w-20">
+                    <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                      <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
+                      <path className="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
+                    </svg>
+                  </div>
+                </div>
+                <h1 className="mb-8 text-3xl sm:text-2xl font-bold text-primary">Takk for at du opplevde en uke i nabolaget!</h1>
+                <p className="mb-10 text-base sm:text-sm text-muted-foreground">
+                  Nå har du fått et innblikk i hvordan livet kan være i dette fantastiske området. Med enkel tilgang til
+                  transport, fritidsaktiviteter, butikker og service er dette et ideelt sted å bo. Tenk å kunne oppleve
+                  dette hver uke!
+                </p>
+                <Button size="lg" className="w-full max-w-xs font-semibold text-base py-6 mx-auto" onClick={restartExperience}>
+                  Start på nytt
+                </Button>
+              </div>
+            </div>
+          </Transition>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </div>
     </div>
-  );
+  )
 }
+
+interface DayOptionProps {
+  emoji: string
+  title: string
+  description: string
+  onClick: () => void
+}
+
+function DayOption({ emoji, title, description, onClick }: DayOptionProps) {
+  const [isHovered, setIsHovered] = useState(false)
+  
+  return (
+    <Card
+      className={`relative flex cursor-pointer flex-col justify-center border-l-4 border-l-primary p-5 sm:p-4 transition-all option-hover-effect hover:bg-gray-50 hover:shadow-md active:scale-[0.98] ${isHovered ? 'translate-y-[-2px]' : ''}`}
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="mb-2 sm:mb-1 flex items-center gap-3 sm:gap-2 pr-8 sm:pr-6 font-semibold text-base sm:text-sm">
+        <span className={`text-2xl sm:text-xl transition-all duration-300 ${isHovered ? 'scale-110' : ''}`}>{emoji}</span> {title}
+      </div>
+      {description && <p className="text-base sm:text-sm text-muted-foreground pr-8 sm:pr-6">{description}</p>}
+      <ChevronRight 
+        className={`absolute right-4 sm:right-3 top-1/2 h-5 w-5 sm:h-4 sm:w-4 -translate-y-1/2 text-primary transition-all duration-300 ${isHovered ? 'opacity-100 translate-x-1' : 'opacity-70'}`} 
+      />
+      {isHovered && (
+        <span className="absolute bottom-2 right-4 text-xs text-gray-400 animate-fadeIn">Klikk for å fortsette</span>
+      )}
+    </Card>
+  )
+}
+
