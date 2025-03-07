@@ -9,6 +9,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "En uke i ditt nye nabolag",
   description: "Opplev en uke i ditt nye nabolag med denne interaktive guiden.",
+  viewport: "width=device-width, initial-scale=1, viewport-fit=cover",
 }
 
 export default function RootLayout({
@@ -19,7 +20,10 @@ export default function RootLayout({
   return (
     <html lang="no" suppressHydrationWarning>
       <head>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+        <meta name="theme-color" content="#f9fafb" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
       <body className={inter.className}>
         <ThemeProvider

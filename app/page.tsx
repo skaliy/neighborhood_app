@@ -25,6 +25,7 @@ export default function NeighborhoodExperience() {
 
   const goToDay = (day: string) => {
     setCurrentDay(day)
+    // Scroll to top without animation
     window.scrollTo(0, 0)
   }
 
@@ -44,23 +45,23 @@ export default function NeighborhoodExperience() {
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
-      <div className="container max-w-md mx-auto px-4 py-8 sm:py-6 relative">
+      <div className="container max-w-md mx-auto px-4 py-6 sm:py-8 relative">
         {/* Progress indicator */}
         {currentDay !== "welcome" && currentDay !== "end-screen" && (
-          <div className="mb-6 animate-fadeIn">
+          <div className="mb-4 sm:mb-6">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-primary">{getProgress()}% fullført</span>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2.5">
               <div 
-                className="bg-primary h-2.5 rounded-full transition-all duration-500 ease-out" 
+                className="bg-primary h-2.5 rounded-full" 
                 style={{ width: `${getProgress()}%` }}
               ></div>
             </div>
           </div>
         )}
 
-        {/* Content container with fixed height for better transitions */}
+        {/* Content container */}
         <div className="relative min-h-[60vh] flex items-center justify-center">
           {/* Welcome Screen */}
           <Transition 
@@ -69,24 +70,26 @@ export default function NeighborhoodExperience() {
           >
             <div className="flex min-h-[80vh] flex-col items-center justify-center text-center">
               <div className="max-w-sm mx-auto">
-                <h1 className="mb-8 text-3xl sm:text-2xl font-bold text-primary">OPPLEV EN UKE I DITT NYE NABOLAG!</h1>
-                <p className="mb-10 text-base sm:text-sm text-muted-foreground">
+                <h1 className="mb-6 sm:mb-8 text-2xl sm:text-3xl font-bold text-primary">OPPLEV EN UKE I DITT NYE NABOLAG!</h1>
+                <p className="mb-8 sm:mb-10 text-base sm:text-base text-muted-foreground">
                   Velkommen til et nabolag som har alt du trenger for en behagelig og praktisk hverdag! Med enkel tilgang
                   til transport, butikker, restauranter og fritidsaktiviteter, kan du nyte en balansert livsstil – enten du
                   er på farten eller vil slappe av.
                 </p>
                 
-                <div className="relative overflow-hidden rounded-lg shadow-lg border border-gray-100 mb-10">
+                <div className="relative overflow-hidden rounded-lg shadow-lg border border-gray-100 mb-8 sm:mb-10">
                   <Image 
                     src="/kronstad.png" 
                     alt="Kronstad neighborhood" 
                     width={600}
                     height={400}
-                    className="w-full h-auto animate-subtle-zoom"
+                    className="w-full h-auto"
+                    priority={true}
+                    sizes="(max-width: 640px) 100vw, 600px"
                   />
                 </div>
                 
-                <Button size="lg" className="w-full max-w-xs font-semibold text-base py-6 mx-auto" onClick={() => goToDay("monday")}>
+                <Button size="lg" className="w-full max-w-xs font-semibold text-base py-5 sm:py-6 mx-auto no-select" onClick={() => goToDay("monday")}>
                   Start opplevelsen
                 </Button>
               </div>
@@ -99,13 +102,13 @@ export default function NeighborhoodExperience() {
             className="w-full"
           >
             <div>
-              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+              <h1 className="mb-3 sm:mb-4 text-xl sm:text-2xl font-bold text-primary text-center">
                 MANDAG
               </h1>
-              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">
+              <p className="mb-4 sm:mb-6 text-center text-base sm:text-base text-muted-foreground">
                 Ny uke, nye muligheter – og heldigvis er reisen til jobb enkel og effektiv:
               </p>
-              <div className="space-y-4 sm:space-y-3">
+              <div className="space-y-3 sm:space-y-4">
                 <DayOption
                   emoji="🚊"
                   title="Bybanen"
@@ -134,13 +137,13 @@ export default function NeighborhoodExperience() {
             className="w-full"
           >
             <div>
-              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+              <h1 className="mb-3 sm:mb-4 text-xl sm:text-2xl font-bold text-primary text-center">
                 TIRSDAG
               </h1>
-              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">
+              <p className="mb-4 sm:mb-6 text-center text-base sm:text-base text-muted-foreground">
                 Etter en lang dag på jobb er det tid for bevegelse og frisk luft:
               </p>
-              <div className="space-y-4 sm:space-y-3">
+              <div className="space-y-3 sm:space-y-4">
                 <DayOption
                   emoji="🏃‍♀️"
                   title="Løp rundt Store Lungegårdsvannet"
@@ -175,13 +178,13 @@ export default function NeighborhoodExperience() {
             className="w-full"
           >
             <div>
-              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+              <h1 className="mb-3 sm:mb-4 text-xl sm:text-2xl font-bold text-primary text-center">
                 ONSDAG
               </h1>
-              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">
+              <p className="mb-4 sm:mb-6 text-center text-base sm:text-base text-muted-foreground">
                 Midtveis i uken – tid for å fylle kjøleskapet og ta unna dagligdagse ærender:
               </p>
-              <div className="space-y-4 sm:space-y-3">
+              <div className="space-y-3 sm:space-y-4">
                 <DayOption
                   emoji="🛒"
                   title="Kiwi"
@@ -222,11 +225,11 @@ export default function NeighborhoodExperience() {
             className="w-full"
           >
             <div>
-              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+              <h1 className="mb-3 sm:mb-4 text-xl sm:text-2xl font-bold text-primary text-center">
                 TORSDAG
               </h1>
-              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">Lad opp før helgen med litt selvpleie og velvære:</p>
-              <div className="space-y-4 sm:space-y-3">
+              <p className="mb-4 sm:mb-6 text-center text-base sm:text-base text-muted-foreground">Lad opp før helgen med litt selvpleie og velvære:</p>
+              <div className="space-y-3 sm:space-y-4">
                 <DayOption
                   emoji="🧖‍♀️"
                   title="Sammen Kronstad badstue"
@@ -255,11 +258,11 @@ export default function NeighborhoodExperience() {
             className="w-full"
           >
             <div>
-              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+              <h1 className="mb-3 sm:mb-4 text-xl sm:text-2xl font-bold text-primary text-center">
                 FREDAG
               </h1>
-              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">Få unna siste arbeidsøkten før helgen:</p>
-              <div className="space-y-4 sm:space-y-3">
+              <p className="mb-4 sm:mb-6 text-center text-base sm:text-base text-muted-foreground">Få unna siste arbeidsøkten før helgen:</p>
+              <div className="space-y-3 sm:space-y-4">
                 <DayOption
                   emoji="🏛️"
                   title="Høgskulen på Vestlandet"
@@ -294,13 +297,13 @@ export default function NeighborhoodExperience() {
             className="w-full"
           >
             <div>
-              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+              <h1 className="mb-3 sm:mb-4 text-xl sm:text-2xl font-bold text-primary text-center">
                 FREDAG KVELD
               </h1>
-              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">
+              <p className="mb-4 sm:mb-6 text-center text-base sm:text-base text-muted-foreground">
                 Endelig helg! Magen rumler etter en produktiv uke. Hva frister til middag?
               </p>
-              <div className="space-y-4 sm:space-y-3">
+              <div className="space-y-3 sm:space-y-4">
                 <DayOption
                   emoji="🍔"
                   title="Bien Snackbar"
@@ -335,11 +338,11 @@ export default function NeighborhoodExperience() {
             className="w-full"
           >
             <div>
-              <h1 className="mb-4 text-2xl sm:text-2xl font-bold text-primary text-center">
+              <h1 className="mb-3 sm:mb-4 text-xl sm:text-2xl font-bold text-primary text-center">
                 SØNDAG
               </h1>
-              <p className="mb-6 text-center text-base sm:text-sm text-muted-foreground">Rund av uken med gode opplevelser:</p>
-              <div className="space-y-4 sm:space-y-3">
+              <p className="mb-4 sm:mb-6 text-center text-base sm:text-base text-muted-foreground">Rund av uken med gode opplevelser:</p>
+              <div className="space-y-3 sm:space-y-4">
                 <DayOption
                   emoji="⚽"
                   title="Brann Stadion"
@@ -369,21 +372,21 @@ export default function NeighborhoodExperience() {
           >
             <div className="flex min-h-[80vh] flex-col items-center justify-center text-center">
               <div className="max-w-sm mx-auto">
-                <div className="mb-8 flex justify-center">
-                  <div className="relative h-24 w-24 sm:h-20 sm:w-20">
+                <div className="mb-6 sm:mb-8 flex justify-center">
+                  <div className="relative h-20 w-20 sm:h-24 sm:w-24">
                     <svg className="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
                       <circle className="checkmark-circle" cx="26" cy="26" r="25" fill="none" />
                       <path className="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
                     </svg>
                   </div>
                 </div>
-                <h1 className="mb-8 text-3xl sm:text-2xl font-bold text-primary">Takk for at du opplevde en uke i nabolaget!</h1>
-                <p className="mb-10 text-base sm:text-sm text-muted-foreground">
+                <h1 className="mb-6 sm:mb-8 text-2xl sm:text-3xl font-bold text-primary">Takk for at du opplevde en uke i nabolaget!</h1>
+                <p className="mb-8 sm:mb-10 text-base sm:text-base text-muted-foreground">
                   Nå har du fått et innblikk i hvordan livet kan være i dette fantastiske området. Med enkel tilgang til
                   transport, fritidsaktiviteter, butikker og service er dette et ideelt sted å bo. Tenk å kunne oppleve
                   dette hver uke!
                 </p>
-                <Button size="lg" className="w-full max-w-xs font-semibold text-base py-6 mx-auto" onClick={restartExperience}>
+                <Button size="lg" className="w-full max-w-xs font-semibold text-base py-5 sm:py-6 mx-auto no-select" onClick={restartExperience}>
                   Start på nytt
                 </Button>
               </div>
@@ -403,25 +406,20 @@ interface DayOptionProps {
 }
 
 function DayOption({ emoji, title, description, onClick }: DayOptionProps) {
-  const [isHovered, setIsHovered] = useState(false)
-  
   return (
     <Card
-      className={`relative flex cursor-pointer flex-col justify-center border-l-4 border-l-primary p-5 sm:p-4 transition-all option-hover-effect hover:bg-gray-50 hover:shadow-md active:scale-[0.98] ${isHovered ? 'translate-y-[-2px]' : ''}`}
+      className="relative flex cursor-pointer flex-col justify-center border-l-4 border-l-primary p-4 sm:p-5 no-select"
       onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      role="button"
+      aria-label={`Velg ${title}`}
     >
-      <div className="mb-2 sm:mb-1 flex items-center gap-3 sm:gap-2 pr-8 sm:pr-6 font-semibold text-base sm:text-sm">
-        <span className={`text-2xl sm:text-xl transition-all duration-300 ${isHovered ? 'scale-110' : ''}`}>{emoji}</span> {title}
+      <div className="mb-1 sm:mb-2 flex items-center gap-2 sm:gap-3 pr-6 sm:pr-8 font-semibold text-sm sm:text-base">
+        <span className="text-xl sm:text-2xl">{emoji}</span> {title}
       </div>
-      {description && <p className="text-base sm:text-sm text-muted-foreground pr-8 sm:pr-6">{description}</p>}
+      {description && <p className="text-sm sm:text-base text-muted-foreground pr-6 sm:pr-8">{description}</p>}
       <ChevronRight 
-        className={`absolute right-4 sm:right-3 top-1/2 h-5 w-5 sm:h-4 sm:w-4 -translate-y-1/2 text-primary transition-all duration-300 ${isHovered ? 'opacity-100 translate-x-1' : 'opacity-70'}`} 
+        className="absolute right-3 sm:right-4 top-1/2 h-4 w-4 sm:h-5 sm:w-5 -translate-y-1/2 text-primary opacity-70" 
       />
-      {isHovered && (
-        <span className="absolute bottom-2 right-4 text-xs text-gray-400 animate-fadeIn">Klikk for å fortsette</span>
-      )}
     </Card>
   )
 }
