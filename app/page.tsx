@@ -1,14 +1,43 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronRight } from "lucide-react"
+import { ChevronRight, Map } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Transition } from "@/components/ui/transition"
 import Image from "next/image"
+import { Dialog, DialogContent, DialogTrigger, DialogTitle } from "@/components/ui/dialog"
 
 export default function NeighborhoodExperience() {
   const [currentDay, setCurrentDay] = useState<string>("welcome")
+  
+  const goToDay = (day: string) => {
+    setCurrentDay(day)
+    // Smooth scroll to top with a slight delay for better UX
+    setTimeout(() => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      })
+    }, 100)
+  }
+
+  const restartExperience = () => {
+    setCurrentDay("welcome")
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    })
+  }
+
+  // Calculate progress percentage
+  const getProgress = () => {
+    const currentIndex = dayOrder.indexOf(currentDay)
+    if (currentIndex <= 0) return 0
+    if (currentIndex >= dayOrder.length - 1) return 100
+    
+    return Math.round((currentIndex / (dayOrder.length - 2)) * 100)
+  }
   
   // Define the order of days
   const dayOrder = [
@@ -23,38 +52,21 @@ export default function NeighborhoodExperience() {
     "end-screen"
   ]
 
-  const goToDay = (day: string) => {
-    setCurrentDay(day)
-    // Scroll to top without animation
-    window.scrollTo(0, 0)
-  }
-
-  const restartExperience = () => {
-    setCurrentDay("welcome")
-    window.scrollTo(0, 0)
-  }
-
-  // Calculate progress percentage
-  const getProgress = () => {
-    const currentIndex = dayOrder.indexOf(currentDay)
-    if (currentIndex <= 0) return 0
-    if (currentIndex >= dayOrder.length - 1) return 100
-    
-    return Math.round((currentIndex / (dayOrder.length - 2)) * 100)
-  }
-
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
-      <div className="container max-w-md mx-auto px-4 py-6 sm:py-8 relative">
+      <div className="w-full max-w-md mx-auto px-4 py-4 sm:py-6 relative">
         {/* Progress indicator */}
         {currentDay !== "welcome" && currentDay !== "end-screen" && (
-          <div className="mb-4 sm:mb-6">
+          <div className="mb-3 sm:mb-4">
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-primary">{getProgress()}% fullført</span>
+              
+              {/* Map Button */}
+              <MapButton />
             </div>
-            <div className="w-full bg-gray-200 rounded-full h-2.5">
+            <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
-                className="bg-primary h-2.5 rounded-full" 
+                className="bg-primary h-2 rounded-full"
                 style={{ width: `${getProgress()}%` }}
               ></div>
             </div>
@@ -68,28 +80,27 @@ export default function NeighborhoodExperience() {
             show={currentDay === "welcome"} 
             className="w-full"
           >
-            <div className="flex min-h-[80vh] flex-col items-center justify-center text-center">
-              <div className="max-w-sm mx-auto">
-                <h1 className="mb-6 sm:mb-8 text-2xl sm:text-3xl font-bold text-primary">OPPLEV EN UKE I DITT NYE NABOLAG!</h1>
-                <p className="mb-8 sm:mb-10 text-base sm:text-base text-muted-foreground">
+            <div className="flex min-h-[70vh] flex-col items-center justify-center text-center">
+              <div className="w-full max-w-sm mx-auto">
+                <h1 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-primary">OPPLEV EN UKE I DITT NYE NABOLAG!</h1>
+                <p className="mb-4 sm:mb-6 text-base sm:text-base text-muted-foreground">
                   Velkommen til et nabolag som har alt du trenger for en behagelig og praktisk hverdag! Med enkel tilgang
-                  til transport, butikker, restauranter og fritidsaktiviteter, kan du nyte en balansert livsstil – enten du
-                  er på farten eller vil slappe av.
+                  til transport, fritidsaktiviteter, butikker og service er dette et ideelt sted å bo.
                 </p>
                 
-                <div className="relative overflow-hidden rounded-lg shadow-lg border border-gray-100 mb-8 sm:mb-10">
+                <div className="relative overflow-hidden rounded-lg shadow-md border border-gray-200 mb-4 sm:mb-6">
                   <Image 
-                    src="/kronstad.png" 
-                    alt="Kronstad neighborhood" 
+                    src="/map.png" 
+                    alt="Kart over nabolaget" 
                     width={600}
                     height={400}
                     className="w-full h-auto"
                     priority={true}
-                    sizes="(max-width: 640px) 100vw, 600px"
+                    sizes="100vw"
                   />
                 </div>
                 
-                <Button size="lg" className="w-full max-w-xs font-semibold text-base py-5 sm:py-6 mx-auto no-select" onClick={() => goToDay("monday")}>
+                <Button size="lg" className="w-full max-w-xs font-semibold text-base py-4 mx-auto" onClick={() => goToDay("monday")}>
                   Start opplevelsen
                 </Button>
               </div>
@@ -112,7 +123,7 @@ export default function NeighborhoodExperience() {
                 <DayOption
                   emoji="🚊"
                   title="Bybanen"
-                  description="Kun få minutters gange til holdeplassen, med både Linje 1 og 2 lett tilgjengelig."
+                  description="Kun få minutters gange til holdeplassen, med både Linje 1 og 2 lett tilgjengelig. Dette gjør Kronstad til et svært sentralt område i Bergen."
                   onClick={() => goToDay("tuesday")}
                 />
                 <DayOption
@@ -153,13 +164,13 @@ export default function NeighborhoodExperience() {
                 <DayOption
                   emoji="🚶‍♂️"
                   title="Gå en tur rundt Solheimsvannet"
-                  description="En rolig 1 km sløyfe rett utenfor døren."
+                  description="Et urbant parkvann med en 1 km rundløype rett utenfor døren."
                   onClick={() => goToDay("wednesday")}
                 />
                 <DayOption
                   emoji="🏋️"
                   title="Sammen Kronstad"
-                  description="Et  moderne treningssenter med varierte treningsmuligheter."
+                  description="Et  moderne treningssenter med varierte treningsmuligheter. Senterets nesten 4000 kvadratmeter er åpne for både studenter og andre."
                   onClick={() => goToDay("wednesday")}
                 />
                 <DayOption
@@ -245,7 +256,7 @@ export default function NeighborhoodExperience() {
                 <DayOption
                   emoji="🧺"
                   title="Leaparken"
-                  description="Nyt en rolig stund."
+                  description="Nyt en rolig stund i en skjult perle i Bergen."
                   onClick={() => goToDay("friday-day")}
                 />
               </div>
@@ -346,13 +357,13 @@ export default function NeighborhoodExperience() {
                 <DayOption
                   emoji="⚽"
                   title="Brann Stadion"
-                  description="Bare 10 minutters gange til fotballfest og elektrisk stemning!"
+                  description="Under 15 minutters gange til fotballfest og elektrisk stemning!"
                   onClick={() => goToDay("end-screen")}
                 />
                 <DayOption
                   emoji="🎭"
                   title="Forum Scene"
-                  description="Konserter, teater og stand-up – kulturen er rett rundt hjørnet."
+                  description="Konserter, teater og stand-up – kun ett bybanestopp eller en 15-minutters spasertur unna."
                   onClick={() => goToDay("end-screen")}
                 />
                 <DayOption
@@ -408,19 +419,53 @@ interface DayOptionProps {
 function DayOption({ emoji, title, description, onClick }: DayOptionProps) {
   return (
     <Card
-      className="relative flex cursor-pointer flex-col justify-center border-l-4 border-l-primary p-4 sm:p-5 no-select"
+      className="relative flex cursor-pointer flex-col justify-center border-l-4 border-l-primary p-3 sm:p-4 hover:bg-gray-50"
       onClick={onClick}
       role="button"
       aria-label={`Velg ${title}`}
     >
-      <div className="mb-1 sm:mb-2 flex items-center gap-2 sm:gap-3 pr-6 sm:pr-8 font-semibold text-sm sm:text-base">
-        <span className="text-xl sm:text-2xl">{emoji}</span> {title}
+      <div className="mb-1 flex items-center gap-2 pr-6 font-semibold text-sm sm:text-base">
+        <span className="text-lg sm:text-xl">{emoji}</span> {title}
       </div>
-      {description && <p className="text-sm sm:text-base text-muted-foreground pr-6 sm:pr-8">{description}</p>}
+      {description && <p className="text-xs sm:text-sm text-muted-foreground pr-6">{description}</p>}
       <ChevronRight 
-        className="absolute right-3 sm:right-4 top-1/2 h-4 w-4 sm:h-5 sm:w-5 -translate-y-1/2 text-primary opacity-70" 
+        className="absolute right-2 sm:right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-primary opacity-70" 
       />
     </Card>
+  )
+}
+
+// Map Button Component
+function MapButton() {
+  return (
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="flex items-center gap-1 font-medium"
+        >
+          <Map className="h-4 w-4" />
+          Se kart
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="w-[95vw] max-w-[95vw] p-0 border-0 rounded-lg overflow-hidden">
+        <DialogTitle className="sr-only">Kart over nabolaget</DialogTitle>
+        <div className="w-full h-[70vh] sm:h-[80vh]">
+          <iframe
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3970.7651591817374!2d5.341950776953125!3d60.38071798200724!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x463cf94c9b3d5cf9%3A0x4e9542bb1bc4b4a5!2sFabrikkgaten%207A%2C%205059%20Bergen!5e0!3m2!1sen!2sno!4v1710175300000!5m2!1sen!2sno"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen={true}
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Google Maps - Fabrikkgaten 7A, Bergen"
+            className="absolute inset-0"
+          ></iframe>
+        </div>
+      </DialogContent>
+    </Dialog>
   )
 }
 
