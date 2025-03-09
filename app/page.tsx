@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { ChevronRight, Map } from "lucide-react"
+import { ChevronRight, Map, Image as ImageIcon } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Transition } from "@/components/ui/transition"
@@ -52,6 +52,65 @@ export default function NeighborhoodExperience() {
     "end-screen"
   ]
 
+  // Get day-specific images
+  const getDayImages = (day: string) => {
+    switch(day) {
+      case "monday":
+        return [
+          "/mandag/bybane1.png", 
+          "/mandag/bybane2.png", 
+          "/mandag/bybane3.png", 
+          "/mandag/sykkel1.png",
+          "/mandag/sykkel2.png",
+          "/mandag/sykkel3.jpeg",
+          "/mandag/sykkel4.jpeg"
+        ];
+      case "tuesday":
+        return [
+          "/tirsdag/slv.png", 
+          "/tirsdag/solheimsvannet.png", 
+          "/tirsdag/sammen.png", 
+          "/tirsdag/sammen2.png",
+          "/tirsdag/ado.png"
+        ];
+      case "wednesday":
+        return [
+          "/onsdag/rema1000.png", 
+          "/onsdag/spar.png", 
+          "/onsdag/kiwi.png", 
+          "/onsdag/apotek.png"
+        ];
+      case "thursday":
+        return [
+          "/torsdag/leaparken.png", 
+          "/torsdag/takterassen.png",
+          "/torsdag/terrase2.png",
+          "/torsdag/terrasse3.png"
+        ];
+      case "friday-day":
+        return [
+          "/fredag_dag/hvl.png", 
+          "/fredag_dag/alba.png", 
+          "/fredag_dag/godtbrod.png"
+        ];
+      case "friday-night":
+        return [
+          "/fredag_kveld/biensnackbar.png", 
+          "/fredag_kveld/sakarias.png", 
+          "/fredag_kveld/gyros.png"
+        ];
+      case "sunday":
+        return [
+          "/sondag/lovstien0.jpeg",
+          "/sondag/lovstien.png",
+          "/sondag/forum.png", 
+          "/sondag/brannstadion.png"
+        ];
+      default:
+        return [];
+    }
+  };
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-center bg-gray-50">
       <div className="w-full max-w-md mx-auto px-4 py-4 sm:py-6 relative">
@@ -61,8 +120,11 @@ export default function NeighborhoodExperience() {
             <div className="flex items-center justify-between mb-2">
               <span className="text-sm font-medium text-primary">{getProgress()}% fullført</span>
               
-              {/* Map Button */}
-              <MapButton />
+              {/* Action Buttons */}
+              <div className="flex gap-2">
+                <PicturesButton day={currentDay} images={getDayImages(currentDay)} />
+                <MapButton />
+              </div>
             </div>
             <div className="w-full bg-gray-200 rounded-full h-2">
               <div 
@@ -84,8 +146,7 @@ export default function NeighborhoodExperience() {
               <div className="w-full max-w-sm mx-auto">
                 <h1 className="mb-4 sm:mb-6 text-xl sm:text-2xl font-bold text-primary">OPPLEV EN UKE I DITT NYE NABOLAG!</h1>
                 <p className="mb-4 sm:mb-6 text-base sm:text-base text-muted-foreground">
-                  Velkommen til et nabolag som har alt du trenger for en behagelig og praktisk hverdag! Med enkel tilgang
-                  til transport, fritidsaktiviteter, butikker og service er dette et ideelt sted å bo.
+                  Velkommen til et nabolag som har alt du trenger for en behagelig og praktisk hverdag!
                 </p>
                 
                 <div className="relative overflow-hidden rounded-lg shadow-md border border-gray-200 mb-4 sm:mb-6">
@@ -206,12 +267,6 @@ export default function NeighborhoodExperience() {
                   emoji="🛒"
                   title="Rema 1000"
                   description="Ca. 250m fra boligen."
-                  onClick={() => goToDay("thursday")}
-                />
-                <DayOption
-                  emoji="🛒"
-                  title="Bunnpris (søndagsåpent)"
-                  description="Ca. 350m fra boligen."
                   onClick={() => goToDay("thursday")}
                 />
                 <DayOption
@@ -467,5 +522,88 @@ function MapButton() {
       </DialogContent>
     </Dialog>
   )
+}
+
+// Pictures Button Component
+function PicturesButton({ day, images }: { day: string, images: string[] }) {
+  // Use a separate state for each dialog instance
+  const [open, setOpen] = useState(false);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  // Early return if no images
+  if (images.length === 0) return null;
+  
+  // Reset image index when dialog opens
+  const handleOpenChange = (open: boolean) => {
+    if (open) {
+      setCurrentImageIndex(0);
+    }
+    setOpen(open);
+  };
+  
+  const nextImage = () => {
+    setCurrentImageIndex((prev) => (prev + 1) % images.length);
+  };
+  
+  const prevImage = () => {
+    setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+  };
+  
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button 
+          variant="outline" 
+          size="sm" 
+          className="flex items-center gap-1 font-medium"
+        >
+          <ImageIcon className="h-4 w-4" />
+          Se bilder
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="w-[95vw] max-w-[95vw] p-4 border-0 rounded-lg overflow-hidden">
+        <DialogTitle className="sr-only">Bilder fra {day}</DialogTitle>
+        <div className="relative w-full h-[70vh] sm:h-[80vh]">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <Image
+              src={images[currentImageIndex]}
+              alt={`Bilde ${currentImageIndex + 1} av ${images.length}`}
+              fill
+              style={{ objectFit: 'contain' }}
+              sizes="95vw"
+              priority
+            />
+          </div>
+          
+          {/* Navigation controls */}
+          <div className="absolute inset-x-0 bottom-4 flex justify-center items-center gap-4 z-10">
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="bg-white/80 hover:bg-white/90 rounded-full w-10 h-10 p-0 flex items-center justify-center"
+              onClick={prevImage}
+              aria-label="Forrige bilde"
+            >
+              <ChevronRight className="h-5 w-5 rotate-180" />
+            </Button>
+            
+            <span className="text-sm bg-white/80 px-3 py-1 rounded-full">
+              {currentImageIndex + 1} / {images.length}
+            </span>
+            
+            <Button 
+              variant="outline" 
+              size="sm" 
+              className="bg-white/80 hover:bg-white/90 rounded-full w-10 h-10 p-0 flex items-center justify-center"
+              onClick={nextImage}
+              aria-label="Neste bilde"
+            >
+              <ChevronRight className="h-5 w-5" />
+            </Button>
+          </div>
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
 }
 
